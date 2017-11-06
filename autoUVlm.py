@@ -2,10 +2,12 @@ bl_info = {
     "name": "Lightmap Auto UV",
     "description": "Script makes automatic UV unwrap for lightmpas and help avoid a pixel sharing issue by islands.",
     "author": "Tomasz Muszynski",
-    "version": (1, 11),
+    "version": (1, 12),
     "tracker_url": "",
     "support": "COMMUNITY",
-    "category": "UV"
+    "category": "UV",
+    "location": "View3D > Menu > Object > Lightmap Auto UV",
+    "tracker_url": "https://github.com/muchasty/Lightmap-Auto-UV",
     }
 
 import bpy
@@ -65,6 +67,9 @@ class LightmapAutoUV(bpy.types.Operator):
         self.lightmap_Overwrite=bpy.context.scene["lightmap_Overwrite"]
         return context.window_manager.invoke_props_dialog(self)
     
+
+
+
     
     
 
@@ -76,16 +81,21 @@ class LightmapAutoUVPanel(bpy.types.Panel):
     def draw(self, context):
         self.layout.operator("object.auto_lightmap")
 
+
         
+def menu_func(self, context):
+    self.layout.operator(LightmapAutoUV.bl_idname)
+
 
 def register():
     bpy.utils.register_class(LightmapAutoUV)
     bpy.utils.register_class(LightmapAutoUVPanel)    
-
+    bpy.types.VIEW3D_MT_object.append(menu_func)
 
 def unregister():
     bpy.utils.unregister_class(LightmapAutoUV)
     bpy.utils.unregister_class(LightmapAutoUVPanel)
+    bpy.types.VIEW3D_MT_object.remove(menu_func)
 
     
 if __name__ == "__main__":
