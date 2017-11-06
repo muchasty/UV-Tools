@@ -1,6 +1,6 @@
 bl_info = {
     "name": "Lightmap Auto UV",
-    "description": "Script makes automatic UV unwrap for lightmpas and help avoid a pixel sharing issue by islands.",
+    "description": "Script makes automatic UV unwrap for lightmaps and helps to avoid a pixel sharing issue by islands.",
     "author": "Tomasz Muszynski",
     "version": (1, 12),
     "tracker_url": "",
