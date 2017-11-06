@@ -10,6 +10,7 @@ bl_info = {
     "tracker_url": "https://github.com/muchasty/Lightmap-Auto-UV",
     }
 
+    
 import bpy
 from bpy.props import *
 
