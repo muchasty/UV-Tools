@@ -2,7 +2,7 @@ bl_info = {
     "name": "Lightmap Auto UV",
     "description": "Script makes automatic UV unwrap for lightmaps and helps to avoid a pixel sharing issue by islands.",
     "author": "Tomasz Muszynski",
-    "version": (1, 13),
+    "version": (1, 12),
     "tracker_url": "",
     "support": "COMMUNITY",
     "category": "UV",
@@ -37,7 +37,7 @@ class LightmapAutoUV(bpy.types.Operator):
         bpy.context.active_object.data.uv_textures.new(name="SmartUV Lightmap")
         bpy.context.active_object.data.uv_textures["SmartUV Lightmap"].active=True
 
-        computedMargin=4*(1/self.lightmap_Resolution)
+        computedMargin=2*(1/self.lightmap_Resolution)
         print(self.lightmap_Resolution ," = ",computedMargin)
         bpy.ops.uv.smart_project(angle_limit=66,island_margin=computedMargin, user_area_weight=1.0, use_aspect=True, stretch_to_bounds=False)
         
