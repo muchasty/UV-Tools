@@ -79,7 +79,7 @@ class LightmapAutoUV(bpy.types.Operator):
         self.lightmap_Resolution=bpy.context.scene["lightmap_Resolution"]
         self.lightmap_KeepEditMode=bpy.context.scene["lightmap_KeepEditMode"]
         self.lightmap_Overwrite=bpy.context.scene["lightmap_Overwrite"]
-        self.lightmap_Overwrite=bpy.context.scene["lightmap_Aspect"]
+        self.lightmap_Aspect=bpy.context.scene["lightmap_Aspect"]
         self.lightmap_Bounds=bpy.context.scene["lightmap_Bounds"]
         self.lightmap_Angle=bpy.context.scene["lightmap_Angle"]
         
