@@ -2,7 +2,7 @@ bl_info = {
     "name": "Lightmap Auto UV",
     "description": "Script makes automatic UV unwrap for lightmaps and helps to avoid a pixel sharing issue by islands.",
     "author": "Tomasz Muszynski",
-    "version": (1, 20),
+    "version": (1, 13),
     "tracker_url": "",
     "support": "COMMUNITY",
     "category": "UV",
@@ -24,10 +24,6 @@ class LightmapAutoUV(bpy.types.Operator):
     lightmap_Resolution=IntProperty(name="Lightmap Resolution [px]", min=4, max=65536)
     lightmap_KeepEditMode=BoolProperty(name="Keep Edit Mode")
     lightmap_Overwrite=BoolProperty(name="Auto-LM Overwrite")
-    lightmap_Aspect=BoolProperty(name="Keep aspect ratio")
-    lightmap_Bounds=BoolProperty(name="Stretch (no-aspect)")
-    lightmap_Angle=FloatProperty(name="Angle limit", min=1, max=89)
-
     
     def execute(self, context):
         bpy.ops.object.mode_set(mode='EDIT')
@@ -43,14 +39,11 @@ class LightmapAutoUV(bpy.types.Operator):
 
         computedMargin=4*(1/self.lightmap_Resolution)
         print(self.lightmap_Resolution ," = ",computedMargin)
-        bpy.ops.uv.smart_project(angle_limit=self.lightmap_Angle,island_margin=computedMargin, user_area_weight=1.0, use_aspect=self.lightmap_Aspect, stretch_to_bounds=self.lightmap_Bounds)
+        bpy.ops.uv.smart_project(angle_limit=66,island_margin=computedMargin, user_area_weight=1.0, use_aspect=True, stretch_to_bounds=False)
         
         bpy.context.scene["lightmap_Resolution"]=self.lightmap_Resolution
         bpy.context.scene["lightmap_KeepEditMode"]=self.lightmap_KeepEditMode
-        bpy.context.scene["lightmap_Overwrite"]=self.lightmap_Overwrite
-        bpy.context.scene["lightmap_Aspect"]=self.lightmap_Aspect 
-        bpy.context.scene["lightmap_Bounds"]=self.lightmap_Bounds
-        bpy.context.scene["lightmap_Angle"]=self.lightmap_Angle
+        bpy.context.scene["lightmap_Overwrite"]=self.lightmap_Overwrite 
     
         if self.lightmap_KeepEditMode==False :    
             bpy.ops.object.mode_set(mode='OBJECT')
@@ -64,25 +57,15 @@ class LightmapAutoUV(bpy.types.Operator):
             self.lightmap_Resolution=bpy.context.scene["lightmap_Resolution"]
             self.lightmap_KeepEditMode=bpy.context.scene["lightmap_KeepEditMode"]
             self.lightmap_Overwrite=bpy.context.scene["lightmap_Overwrite"]
-            self.lightmap_Aspect=bpy.context.scene["lightmap_Aspect"]
-            self.lightmap_Bounds=bpy.context.scene["lightmap_Bounds"]
-            self.lightmap_Angle=bpy.context.scene["lightmap_Angle"]
         except:
             bpy.context.scene["lightmap_Resolution"]=256    
             bpy.context.scene["lightmap_KeepEditMode"]=False
-            bpy.context.scene["lightmap_Overwrite"]=True
-            bpy.context.scene["lightmap_Aspect"]=True 
-            bpy.context.scene["lightmap_Bounds"]=True
-            bpy.context.scene["lightmap_Angle"]=89
+            bpy.context.scene["lightmap_Overwrite"]=False
         
         
         self.lightmap_Resolution=bpy.context.scene["lightmap_Resolution"]
         self.lightmap_KeepEditMode=bpy.context.scene["lightmap_KeepEditMode"]
         self.lightmap_Overwrite=bpy.context.scene["lightmap_Overwrite"]
-        self.lightmap_Overwrite=bpy.context.scene["lightmap_Aspect"]
-        self.lightmap_Bounds=bpy.context.scene["lightmap_Bounds"]
-        self.lightmap_Angle=bpy.context.scene["lightmap_Angle"]
-        
         return context.window_manager.invoke_props_dialog(self)
     
 
