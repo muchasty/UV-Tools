@@ -1,7 +1,7 @@
 bl_info = {
     "name": "Sure UVW Map - DEVELOPEMENT",
     "author": "Alexander Milovsky +",
-    "version": (0, 6),
+    "version": (0, 6, 1),
     "blender": (2, 80, 0),
     "api": 45093,
     "location": "Properties > Object Data (below UV Maps), parameters in Tool Properties",
@@ -277,9 +277,10 @@ def best_planar_map():
 class SureUVWOperator(bpy.types.Operator):
     bl_idname = "object.sureuvw_operator"
     bl_label = "Sure UVW Map"
-    bl_space_type = "PROPERTIES"
-    bl_region_type = "WINDOW"
     bl_context = "data"
+    #bl_space_type = "VIEW_3D"
+    #bl_region_type = "TOOL_PROPS"
+    
     
     bl_options = {'REGISTER', 'UNDO'}
 
@@ -388,7 +389,10 @@ class SureUVWOperator(bpy.types.Operator):
     def draw(self, context):
         if self.action == 'bestplanar' or self.action == 'rotatecw' or self.action == 'rotateccw':
             self.action = 'bestplanar'
+   
+                        
             layout = self.layout
+                      
             layout.label("Size - "+self.action)
             layout.prop(self,'size',text="")
             layout.label("Z rotation")
@@ -408,24 +412,30 @@ class SureUVWOperator(bpy.types.Operator):
             #layout.prop(self,'preview_flag', text="Interactive Preview")
             #layout.operator("object.sureuvw_operator",text="Done").action='doneplanar'
             
-        elif self.action == 'box':          
+        elif self.action == 'box':  
+
+            print("boxmap-draw")
+
             layout = self.layout
-            layout.label("Size")
+
+            layout.label(text="UV Islands Modifiers:")
+            layout.label(text="Scale")
             layout.prop(self,'size',text="")
-            layout.label("XYZ rotation")
+            layout.label(text="XYZ rotation")
             col = layout.column()
             col.prop(self,'rot', text="")
-            layout.label("XYZ offset")
+            layout.label(text="XYZ offset")
             col = layout.column()
             col.prop(self,'offset', text="")
-            layout.label("Texture squash (optional)")
-            layout.label("Always must be 1.0 !!!")
+            layout.label(text="Aspect Ratio")
+
             layout.prop(self,'texaspect', text="")
 
             #layout.prop(self,'preview_flag', text="Interactive Preview")        
             #layout.operator("object.sureuvw_operator",text="Done").action='donebox'
-             
 
+    
+    
 class SureUVWPanel(bpy.types.Panel):
     bl_label = "Sure UVW Mapping"
     bl_space_type = "PROPERTIES"
@@ -440,24 +450,27 @@ class SureUVWPanel(bpy.types.Panel):
         obj = context.active_object
         return (obj and obj.type == 'MESH')
 
+
     def draw(self, context):
         
         layout = self.layout
         obj = context.active_object
-        box = layout.box()        
         
-        box.label(text="Press this button first:")
-        box.operator("object.sureuvw_operator",text="Show active texture on object").action='showtex'
-        box.label(text="UVW Mapping:")
-        box.operator("object.sureuvw_operator",text="UVW Box Map").action='box'
-        box.operator("object.sureuvw_operator",text="Best Planar Map").action='bestplanar'
-        box.label(text="1. Make Material With Raster Texture!")
-        box.label(text="2. Set Texture Mapping Coords: UV!")
-        box.label(text="3. Use Addon buttons")
+        layout.label(text="Press this button first:")
+        layout.operator("object.sureuvw_operator",text="Show active texture on object").action='showtex'
+        layout.label(text="UVW Mapping:")
+#        layout.operator("object.sureuvw_operator",text="UVW Box Map").action='box'
+        layout.operator(SureUVWOperator.bl_idname,text="UVW Box Map").action="box"
+        layout.operator(SureUVWOperator.bl_idname,text="Best Planar Map").action='bestplanar'
+        layout.label(text="1. Make Material With Raster Texture!")
+        layout.label(text="2. Set Texture Mapping Coords: UV!")
+        layout.label(text="3. Use Addon buttons")
 
 #
 # Registration
 #
+
+#exit
 
 def register():
     bpy.utils.register_class(SureUVWOperator)
