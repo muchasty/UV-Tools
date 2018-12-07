@@ -1,7 +1,7 @@
 bl_info = {
     "name": "Sure UVW Map - DEVELOPEMENT",
     "author": "Alexander Milovsky +",
-    "version": (0, 6, 1),
+    "version": (0, 6, 3),
     "blender": (2, 80, 0),
     "api": 45093,
     "location": "Properties > Object Data (below UV Maps), parameters in Tool Properties",
@@ -15,6 +15,8 @@ import bpy
 from bpy.props import BoolProperty, FloatProperty, StringProperty, FloatVectorProperty
 from math import sin, cos, pi
 from mathutils import Vector
+
+
 
 # globals for Box Mapping
 all_scale_def = 1
@@ -259,7 +261,7 @@ def best_planar_map():
                 v_idx = mesh.loops[loop].vertex_index
 
                 n = pol.normal
-                co = q * mesh.vertices[v_idx].co
+                co = q @ (mesh.vertices[v_idx].co)
                 
                 x = co.x * sx
                 y = co.y * sy
@@ -278,26 +280,26 @@ class SureUVWOperator(bpy.types.Operator):
     bl_idname = "object.sureuvw_operator"
     bl_label = "Sure UVW Map"
     bl_context = "data"
-    #bl_space_type = "VIEW_3D"
-    #bl_region_type = "TOOL_PROPS"
-    
+    bl_space_type = "VIEW_3D"
+    bl_region_type = "TOOL_PROPS"
+
     
     bl_options = {'REGISTER', 'UNDO'}
 
     
-    action = StringProperty()  
+    action : StringProperty()  
 
-    size = FloatProperty(name="Size", default=1.0, precision=4)
-    rot = FloatVectorProperty(name="XYZ Rotation")
-    offset = FloatVectorProperty(name="XYZ offset", precision=4)
+    size : FloatProperty(name="Size", default=1.0, precision=4)
+    rot : FloatVectorProperty(name="XYZ Rotation")
+    offset : FloatVectorProperty(name="XYZ offset", precision=4)
 
-    zrot = FloatProperty(name="Z rotation", default=0.0)
-    xoffset = FloatProperty(name="X offset", default=0.0, precision=4)
-    yoffset = FloatProperty(name="Y offset", default=0.0, precision=4)
-    texaspect = FloatProperty(name="Texture aspect", default=1.0, precision=4)
+    zrot : FloatProperty(name="Z rotation", default=0.0)
+    xoffset : FloatProperty(name="X offset", default=0.0, precision=4)
+    yoffset : FloatProperty(name="Y offset", default=0.0, precision=4)
+    texaspect : FloatProperty(name="Texture aspect", default=1.0, precision=4)
 
-    flag90 = BoolProperty()
-    flag90ccw = BoolProperty()
+    flag90 : BoolProperty()
+    flag90ccw : BoolProperty()
 
 
     @classmethod
@@ -390,6 +392,7 @@ class SureUVWOperator(bpy.types.Operator):
         if self.action == 'bestplanar' or self.action == 'rotatecw' or self.action == 'rotateccw':
             self.action = 'bestplanar'
    
+            print("planar-draw")
                         
             layout = self.layout
                       
@@ -417,6 +420,7 @@ class SureUVWOperator(bpy.types.Operator):
             print("boxmap-draw")
 
             layout = self.layout
+            layout.use_property_split = True # Active single-column layout
 
             layout.label(text="UV Islands Modifiers:")
             layout.label(text="Scale")
@@ -437,6 +441,7 @@ class SureUVWOperator(bpy.types.Operator):
     
     
 class SureUVWPanel(bpy.types.Panel):
+    bl_idname = "object.sureuvw_operator"
     bl_label = "Sure UVW Mapping"
     bl_space_type = "PROPERTIES"
     bl_region_type = "WINDOW"
@@ -456,11 +461,13 @@ class SureUVWPanel(bpy.types.Panel):
         layout = self.layout
         obj = context.active_object
         
+
+        
         layout.label(text="Press this button first:")
         layout.operator("object.sureuvw_operator",text="Show active texture on object").action='showtex'
         layout.label(text="UVW Mapping:")
 #        layout.operator("object.sureuvw_operator",text="UVW Box Map").action='box'
-        layout.operator(SureUVWOperator.bl_idname,text="UVW Box Map").action="box"
+        layout.operator(SureUVWOperator.bl_idname,text="UVW Box Map").action='box'
         layout.operator(SureUVWOperator.bl_idname,text="Best Planar Map").action='bestplanar'
         layout.label(text="1. Make Material With Raster Texture!")
         layout.label(text="2. Set Texture Mapping Coords: UV!")
@@ -470,17 +477,13 @@ class SureUVWPanel(bpy.types.Panel):
 # Registration
 #
 
-#exit
 
-def register():
-    bpy.utils.register_class(SureUVWOperator)
-    bpy.utils.register_class(SureUVWPanel)
+classes =  (
+    SureUVWOperator,
+    SureUVWPanel,
+)
 
-
-def unregister():
-    bpy.utils.unregister_class(SureUVWOperator)
-    bpy.utils.unregister_class(SureUVWPanel)
-
+register, unregister = bpy.utils.register_classes_factory(classes)
 
 if __name__ == "__main__":
     register()
