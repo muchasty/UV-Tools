@@ -1,15 +1,15 @@
 bl_info = {
-    "name": "Sure UVW Map - DEVELOPEMENT",
-    "author": "Alexander Milovsky +",
-    "version": (0, 6, 3),
+    "name": "Sure UVW Map",
+    "author": "TomaszMuszynski (UI adaptation), Alexander Milovsky (Functionality)",
+    "version": (0, 6, 5),
     "blender": (2, 80, 0),
-    "api": 45093,
-    "location": "Properties > Object Data (below UV Maps), parameters in Tool Properties",
+    "location": "View3D > Properties Region (N-Panel) > UV",
     "description": "Box / Best Planar UVW Map (Make Material With Raster Texture First!)",
-    "warning": "",
-    "wiki_url": "http://blenderartists.org/forum/showthread.php?236631-Addon-Simple-Box-UVW-Map-Modifier",
-    "tracker_url": "https://projects.blender.org/tracker/index.php",
-    "category": "Mesh"}
+    "support": "COMMUNITY",
+    "category": "UV",
+    "location": "View3D > Properties Region (N-Panel) > UV",
+    "tracker_url": "https://github.com/muchasty/UV-Tools",
+    }
 
 import bpy
 from bpy.props import BoolProperty, FloatProperty, StringProperty, FloatVectorProperty
@@ -37,40 +37,14 @@ zrot_def = 0
 # Preview flag
 preview_flag = True
 
-def show_texture():
-    obj = bpy.context.active_object
-    mesh = obj.data
-    is_editmode = (obj.mode == 'EDIT')
-    # if in EDIT Mode switch to OBJECT
-    if is_editmode:
-        bpy.ops.object.mode_set(mode='OBJECT', toggle=False)
-
-    # if no UVtex - create it
-    if not mesh.uv_layers:
-        uvtex = bpy.ops.mesh.uv_texture_add()
-    uvtex = mesh.uv_layers.active
-    uvtex.active_render = True
-
-    img = None    
-    aspect = 1.0
-    mat = obj.active_material
-
-    try:
-        if mat:
-            img = mat.active_texture
-            for f in mesh.polygons:  
-                if not is_editmode or f.select:
-                    uvtex.data[f.index].image = img.image
-        else:
-            img = None        
-    except:
-        pass
-
-    # Back to EDIT Mode
-    if is_editmode:
-        bpy.ops.object.mode_set(mode='EDIT', toggle=False)
 
 
+
+#**************************************************************************************************************************
+#**************************************************************************************************************************
+#**************************************************************************************************************************
+# BOX MAPPING
+#**************************************************************************************************************************
 def box_map():    
     #print('** Boxmap **')
     global all_scale_def,x_offset_def,y_offset_def,z_offset_def,x_rot_def,y_rot_def,z_rot_def, tex_aspect
@@ -191,8 +165,16 @@ def box_map():
     # Back to EDIT Mode
     if is_editmode:
         bpy.ops.object.mode_set(mode='EDIT', toggle=False)
+        
 
+
+
+
+#**************************************************************************************************************************
+#**************************************************************************************************************************        
+#**************************************************************************************************************************
 # Best Planar Mapping
+#**************************************************************************************************************************
 def best_planar_map():
     global all_scale_def,xoffset_def,yoffset_def,zrot_def, tex_aspect
     
@@ -276,6 +258,16 @@ def best_planar_map():
         bpy.ops.object.mode_set(mode='EDIT', toggle=False)
 
 
+
+
+
+
+#**************************************************************************************************************************
+#**************************************************************************************************************************
+#**************************************************************************************************************************
+# SureUVMOperator
+#**************************************************************************************************************************
+
 class SureUVWOperator(bpy.types.Operator):
     bl_idname = "object.sureuvw_operator"
     bl_label = "Sure UVW Map"
@@ -342,12 +334,7 @@ class SureUVWOperator(bpy.types.Operator):
             best_planar_map()
         elif self.action == 'box':
             box_map()
-        elif self.action == 'showtex':
-            show_texture()
-        elif self.action == 'doneplanar':
-            best_planar_map()
-        elif self.action == 'donebox':
-            box_map()
+
         
         #print('finish execute')
         return {'FINISHED'}
@@ -377,12 +364,7 @@ class SureUVWOperator(bpy.types.Operator):
             best_planar_map()
         elif self.action == 'box':
             box_map()
-        elif self.action == 'showtex':
-            show_texture()
-        elif self.action == 'doneplanar':
-            best_planar_map()
-        elif self.action == 'donebox':
-            box_map()
+
             
         #print('finish invoke')
         return {'FINISHED'}
@@ -396,20 +378,20 @@ class SureUVWOperator(bpy.types.Operator):
                         
             layout = self.layout
                       
-            layout.label("Size - "+self.action)
+            layout.label(text="Size - "+self.action)
             layout.prop(self,'size',text="")
-            layout.label("Z rotation")
+            layout.label(text="Z rotation")
             col = layout.column()
             col.prop(self,'zrot',text="")
             row = layout.row()
             row.prop(self,'flag90ccw',text="-90 (CCW)")
             row.prop(self,'flag90',text="+90 (CW)")
-            layout.label("XY offset")
+            layout.label(text="XY offset")
             col = layout.column()
             col.prop(self,'xoffset', text="")
             col.prop(self,'yoffset', text="")
 
-            layout.label("Texture aspect")
+            layout.label(text="Texture aspect")
             layout.prop(self,'texaspect', text="")
 
             #layout.prop(self,'preview_flag', text="Interactive Preview")
@@ -438,17 +420,24 @@ class SureUVWOperator(bpy.types.Operator):
             #layout.prop(self,'preview_flag', text="Interactive Preview")        
             #layout.operator("object.sureuvw_operator",text="Done").action='donebox'
 
-    
+
+
+
+
+
+
+#**************************************************************************************************************************
+#**************************************************************************************************************************
+#**************************************************************************************************************************
+# SureUVMPanel
+#**************************************************************************************************************************
     
 class SureUVWPanel(bpy.types.Panel):
     bl_idname = "object.sureuvw_operator"
     bl_label = "Sure UVW Mapping"
-    bl_space_type = "PROPERTIES"
-    bl_region_type = "WINDOW"
-    bl_context = "data"
-    #bl_space_type = "VIEW_3D"
-    #bl_region_type = "TOOLS"
-    #bl_region_type = "TOOL_PROPS"
+    bl_space_type = "VIEW_3D"
+    bl_region_type = "UI"
+    bl_category = "UV"
 
     @classmethod
     def poll(cls, context):
@@ -463,20 +452,24 @@ class SureUVWPanel(bpy.types.Panel):
         
 
         
-        layout.label(text="Press this button first:")
-        layout.operator("object.sureuvw_operator",text="Show active texture on object").action='showtex'
+
         layout.label(text="UVW Mapping:")
-#        layout.operator("object.sureuvw_operator",text="UVW Box Map").action='box'
+
         layout.operator(SureUVWOperator.bl_idname,text="UVW Box Map").action='box'
         layout.operator(SureUVWOperator.bl_idname,text="Best Planar Map").action='bestplanar'
         layout.label(text="1. Make Material With Raster Texture!")
         layout.label(text="2. Set Texture Mapping Coords: UV!")
         layout.label(text="3. Use Addon buttons")
 
-#
-# Registration
-#
 
+
+
+
+#**************************************************************************************************************************
+#**************************************************************************************************************************
+#**************************************************************************************************************************
+# Registration
+#**************************************************************************************************************************
 
 classes =  (
     SureUVWOperator,

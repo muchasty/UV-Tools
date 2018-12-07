@@ -2,12 +2,12 @@ bl_info = {
     "name": "Lightmap Auto UV",
     "description": "Script makes automatic UV unwrap for lightmaps and helps to avoid a pixel sharing issue by islands.",
     "author": "Tomasz Muszynski",
-    "version": (1, 20),
-    "tracker_url": "",
+    "blender":(2,80,0),
+    "version": (1, 23),
     "support": "COMMUNITY",
     "category": "UV",
-    "location": "View3D > Menu > Object > Lightmap Auto UV",
-    "tracker_url": "https://github.com/muchasty/Lightmap-Auto-UV",
+    "location": "View3D > Properties Region (N-Panel) > UV",
+    "tracker_url": "https://github.com/muchasty/UV-Tools",
     }
 
     
@@ -20,26 +20,33 @@ class LightmapAutoUV(bpy.types.Operator):
     bl_label = "Lightmap Auto UV"    # display name in the interface.
     bl_options = {'REGISTER', 'UNDO'}  # enable undo for the operator.
     
+    @classmethod
+    def poll(cls, context):
+        obj = context.active_object
+        return (obj and obj.type == 'MESH')    
     
-    lightmap_Resolution=IntProperty(name="Lightmap Resolution [px]", min=4, max=65536)
-    lightmap_KeepEditMode=BoolProperty(name="Keep Edit Mode")
-    lightmap_Overwrite=BoolProperty(name="Auto-LM Overwrite")
-    lightmap_Aspect=BoolProperty(name="Keep aspect ratio")
-    lightmap_Bounds=BoolProperty(name="Stretch (no-aspect)")
-    lightmap_Angle=FloatProperty(name="Angle limit", min=1, max=89)
+    
+    lightmap_Resolution : IntProperty(name="Lightmap Resolution [px]", min=4, max=65536)
+    lightmap_KeepEditMode : BoolProperty(name="Keep Edit Mode")
+    lightmap_Overwrite : BoolProperty(name="Auto-LM Overwrite")
+    lightmap_Aspect : BoolProperty(name="Keep aspect ratio")
+    lightmap_Bounds : BoolProperty(name="Stretch (no-aspect)")
+    lightmap_Angle : FloatProperty(name="Angle limit", min=1, max=89)
 
     
     def execute(self, context):
+        bpy.context.active_object.select_set(True)
         bpy.ops.object.mode_set(mode='EDIT')
         bpy.ops.mesh.select_all(action='SELECT')         
         try:    
             if self.lightmap_Overwrite==True :           
-                bpy.context.active_object.data.uv_textures.remove(bpy.context.active_object.data.uv_textures["SmartUV Lightmap"])
+                bpy.context.active_object.data.uv_layers.remove(bpy.context.active_object.data.uv_layers["SmartUV Lightmap"])
         except:
             pass
         
-        bpy.context.active_object.data.uv_textures.new(name="SmartUV Lightmap")
-        bpy.context.active_object.data.uv_textures["SmartUV Lightmap"].active=True
+        
+        bpy.context.active_object.data.uv_layers.new(name="SmartUV Lightmap")
+        bpy.context.active_object.data.uv_layers["SmartUV Lightmap"].active=True
 
         computedMargin=4*(1/self.lightmap_Resolution)
         print(self.lightmap_Resolution ," = ",computedMargin)
@@ -54,7 +61,7 @@ class LightmapAutoUV(bpy.types.Operator):
     
         if self.lightmap_KeepEditMode==False :    
             bpy.ops.object.mode_set(mode='OBJECT')
-            bpy.context.active_object.data.uv_textures[0].active=True
+            bpy.context.active_object.data.uv_layers[0].active=True
         
     
         return {'FINISHED'}
@@ -92,30 +99,46 @@ class LightmapAutoUV(bpy.types.Operator):
     
 
 class LightmapAutoUVPanel(bpy.types.Panel):
-    bl_label = "Dialog"
+    bl_label = "Lightmap Auto UV"
     bl_space_type = "VIEW_3D"
     bl_region_type = "UI"
-    global lightmap_Resolution
+    bl_category = "UV"
+    global lightmap_Resolution  
     def draw(self, context):
         self.layout.operator("object.auto_lightmap")
 
 
         
-def menu_func(self, context):
+def menu_LightmapAutoUV(self, context):
     self.layout.operator(LightmapAutoUV.bl_idname)
 
 
-def register():
-    bpy.utils.register_class(LightmapAutoUV)
-    bpy.utils.register_class(LightmapAutoUVPanel)    
-    bpy.types.VIEW3D_MT_object.append(menu_func)
+# ******[ Registering ]******************************************
+# ***************************************************************
 
+
+# = REGISTER ====================================================
+def register():
+    # classes
+    bpy.utils.register_class(LightmapAutoUV)
+    bpy.utils.register_class(LightmapAutoUVPanel)   
+    # menus    
+    #bpy.types.VIEW3D_MT_object.append(menu_LightmapAutoUV)
+
+
+# = unREGISTER ==================================================
 def unregister():
+
+    # classes    
     bpy.utils.unregister_class(LightmapAutoUV)
     bpy.utils.unregister_class(LightmapAutoUVPanel)
-    bpy.types.VIEW3D_MT_object.remove(menu_func)
+    # menus
+    #bpy.types.VIEW3D_MT_object.remove(menu_LightmapAutoUV)
 
-    
+
+
+
+# ---- Proceed Registering ---------------------------------------    
 if __name__ == "__main__":
     register()
 
