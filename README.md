@@ -1,6 +1,6 @@
 # Lightmap Auto UV
 Script makes automatic UV unwrap for lightmaps and helps to avoid a pixel sharing issue by islands.
-![Lightmap Auto UV](https://raw.githubusercontent.com/muchasty/UV-Tools/master/Information & License/LightmapAutoUV.JPG)
+![image](https://raw.githubusercontent.com/muchasty/UV-Tools/master/Information%20%26%20License/LightmapAutoUV.JPG)
 
 
 # Sure UVW Map
