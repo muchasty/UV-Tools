@@ -1,9 +1,9 @@
 bl_info = {
     "name": "Sure UVW Map",
     "author": "TomaszMuszynski (UI adaptation), Alexander Milovsky (Functionality)",
-    "version": (0, 6, 5),
+    "version": (0, 6, 6),
     "blender": (2, 80, 0),
-    "location": "View3D > Properties Region (N-Panel) > UV",
+    "location": "View3D > Properties Region (N-Panel) > UV / View3D > menu UV / ImageEditor > menu UV",
     "description": "Box / Best Planar UVW Map (Make Material With Raster Texture First!)",
     "support": "COMMUNITY",
     "category": "UV",
@@ -463,20 +463,38 @@ class SureUVWPanel(bpy.types.Panel):
 
 
 
+def menu_SureUVW_BOX(self, context):
+    self.layout.operator(SureUVWOperator.bl_idname,text="Sure UVW BOX").action='box'
 
+def menu_SureUVW_BestPlanar(self, context):
+    self.layout.operator(SureUVWOperator.bl_idname,text="Sure UVW Best Planar").action='bestplanar'    
 
 #**************************************************************************************************************************
 #**************************************************************************************************************************
 #**************************************************************************************************************************
 # Registration
 #**************************************************************************************************************************
+def register():
+    #classes
+    bpy.utils.register_class(SureUVWOperator)
+    bpy.utils.register_class(SureUVWPanel)
+    # menus    
+    bpy.types.VIEW3D_MT_uv_map.append(menu_SureUVW_BOX)
+    bpy.types.IMAGE_MT_uvs.append(menu_SureUVW_BOX)
+    bpy.types.VIEW3D_MT_uv_map.append(menu_SureUVW_BestPlanar)
+    bpy.types.IMAGE_MT_uvs.append(menu_SureUVW_BestPlanar)
 
-classes =  (
-    SureUVWOperator,
-    SureUVWPanel,
-)
+def unregister():
+    #classes
+    bpy.utils.unregister_class(SureUVWOperator)
+    bpy.utils.unregister_class(SureUVWPanel)
+    # menus    
+    bpy.types.VIEW3D_MT_uv_map.remove(menu_SureUVW_BOX)
+    bpy.types.IMAGE_MT_uvs.remove(menu_SureUVW_BOX)
+    bpy.types.VIEW3D_MT_uv_map.remove(menu_SureUVW_BestPlanar)
+    bpy.types.IMAGE_MT_uvs.remove(menu_SureUVW_BestPlanar)
 
-register, unregister = bpy.utils.register_classes_factory(classes)
+
 
 if __name__ == "__main__":
     register()

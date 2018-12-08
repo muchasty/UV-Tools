@@ -3,10 +3,10 @@ bl_info = {
     "description": "Script makes automatic UV unwrap for lightmaps and helps to avoid a pixel sharing issue by islands.",
     "author": "Tomasz Muszynski",
     "blender":(2,80,0),
-    "version": (1, 23),
+    "version": (1, 24),
     "support": "COMMUNITY",
     "category": "UV",
-    "location": "View3D > Properties Region (N-Panel) > UV",
+    "location": "View3D > Properties Region (N-Panel) > UV / View3D > menu UV / ImageEditor > menu UV",
     "tracker_url": "https://github.com/muchasty/UV-Tools",
     }
 
@@ -123,7 +123,8 @@ def register():
     bpy.utils.register_class(LightmapAutoUV)
     bpy.utils.register_class(LightmapAutoUVPanel)   
     # menus    
-    #bpy.types.VIEW3D_MT_object.append(menu_LightmapAutoUV)
+    bpy.types.VIEW3D_MT_uv_map.append(menu_LightmapAutoUV)
+    bpy.types.IMAGE_MT_uvs.append(menu_LightmapAutoUV)
 
 
 # = unREGISTER ==================================================
@@ -133,7 +134,8 @@ def unregister():
     bpy.utils.unregister_class(LightmapAutoUV)
     bpy.utils.unregister_class(LightmapAutoUVPanel)
     # menus
-    #bpy.types.VIEW3D_MT_object.remove(menu_LightmapAutoUV)
+    bpy.types.VIEW3D_MT_uv_map.remove(menu_LightmapAutoUV)
+    bpy.types.IMAGE_MT_uvs.remove(menu_LightmapAutoUV)
 
 
 
