@@ -18,3 +18,5 @@ Original author: Jakub Uhlik
 
 Blender 2.80 probably has a bug that does not allow to process the transformation.resize properlly.
 Wait for an update.
+https://developer.blender.org/T59198
+
