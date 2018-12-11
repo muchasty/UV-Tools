@@ -16,4 +16,5 @@ Original author: Alexander Milovsky
 This add-on Equalizes scale of UVs of selected objects to active object.
 Original author: Jakub Uhlik
 
-
+Blender 2.80 probably has a bug that does not allow to process the transformation.resize properlly.
+Wait for an update.
