@@ -3,7 +3,7 @@ bl_info = {
     "description": "Tools to batch export fbx files",
     "author": "Tomasz Muszynski based on work of Patrick Jezek",
     "blender": (2, 80, 0),
-    "version": (1, 1, 2),
+    "version": (1, 1, 1),
     "support": "COMMUNITY",
     "category": "Import-Export",
     "location": "View3D > Properties Region (N-Panel) > Export",
@@ -70,10 +70,10 @@ class PeaBatchExport(bpy.types.Operator):
 
         #OBJ_origin=bpy.context.scene.obj_individual_origin 
         OBJ_origin=self.selforigin
-        CUR_loc=Vector(bpy.context.scene.cursor.location)
+        CUR_loc=Vector(bpy.context.scene.cursor_location)
         for obj in col:
             # cursor to origin
-            bpy.context.scene.cursor.location = (0.0, 0.0, 0.0)
+            bpy.context.scene.cursor_location = (0.0, 0.0, 0.0)
             
             # INDIVIDUAL ORIGIN issue:
             # Use individual origin ?
@@ -81,7 +81,7 @@ class PeaBatchExport(bpy.types.Operator):
             obj_origin_point =  current_location
             if OBJ_origin==True :
                 print("ATTENTION: Using individual objects origins ! : ",obj_origin_point)
-                obj.location=bpy.context.scene.cursor.location
+                obj.location=bpy.context.scene.cursor_location
             
             # select only current object
             bpy.ops.object.select_all(action='DESELECT')
@@ -106,7 +106,7 @@ class PeaBatchExport(bpy.types.Operator):
                 print("INDIVIDUAL ORIGIN: placing object in the original location : ",obj_origin_point)
                 
               
-            bpy.context.scene.cursor.location = Vector(CUR_loc)
+            bpy.context.scene.cursor_location = Vector(CUR_loc)
             
         print("--[ FINISHED ]-----------------------------------------------")      
         return {'FINISHED'}
