@@ -1,7 +1,7 @@
 bl_info = {
     "name": "Sure UVW Map",
     "author": "TomaszMuszynski (UI adaptation), Alexander Milovsky (Functionality)",
-    "version": (0, 6, 7),
+    "version": (0, 6, 6),
     "blender": (2, 80, 0),
     "location": "View3D > Properties Region (N-Panel) > UV / View3D > menu UV / ImageEditor > menu UV",
     "description": "Box / Best Planar UVW Map (Make Material With Raster Texture First!)",
@@ -433,7 +433,7 @@ class SureUVWOperator(bpy.types.Operator):
 #**************************************************************************************************************************
     
 class SureUVWPanel(bpy.types.Panel):
-    bl_idname = "SUREUVW_PT_object_sureuvw_operator"
+    bl_idname = "object.sureuvw_operator"
     bl_label = "Sure UVW Mapping"
     bl_space_type = "VIEW_3D"
     bl_region_type = "UI"

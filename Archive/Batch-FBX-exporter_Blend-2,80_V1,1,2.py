@@ -3,7 +3,7 @@ bl_info = {
     "description": "Tools to batch export fbx files",
     "author": "Tomasz Muszynski based on work of Patrick Jezek",
     "blender": (2, 80, 0),
-    "version": (1, 1, 3),
+    "version": (1, 1, 2),
     "support": "COMMUNITY",
     "category": "Import-Export",
     "location": "View3D > Properties Region (N-Panel) > Export",
@@ -19,7 +19,7 @@ from math import *
 
 class BatchExportPanel(bpy.types.Panel):
 
-    bl_idname = "BATCHFBXEXPORTER_PT_BatchExportPanel"
+    bl_idname = "BatchFBXexporter"
     bl_label = "Batch FBX exporter"
     bl_space_type = 'VIEW_3D'
     bl_region_type = 'UI'

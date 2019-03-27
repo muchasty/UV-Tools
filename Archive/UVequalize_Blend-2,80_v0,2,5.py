@@ -20,7 +20,7 @@ bl_info = {
     "name": "UV Equalize",
     "description": "Equalizes scale of UVs of selected objects to active object.",
     "author": "Jakub Uhlik + Tomasz Muszynski (2.80 porting)",
-    "version": (0, 2, 6),
+    "version": (0, 2, 5),
     "blender":(2,80,0),
     "support": "COMMUNITY",
     "category": "UV",
@@ -206,7 +206,6 @@ def equalize(operator, context, use_pack, rotate, margin, use_active, ):
 
 class UVEqualizePanel(bpy.types.Panel):
     bl_label = "UV Equalize"
-    bl_idname = "UVEQUALIZE_PT_UVEqualize_Panel"
     bl_space_type = "VIEW_3D"
     bl_region_type = "UI"
     bl_category = "UV"

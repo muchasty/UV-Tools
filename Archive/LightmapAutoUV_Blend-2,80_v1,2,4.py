@@ -3,7 +3,7 @@ bl_info = {
     "description": "Script makes automatic UV unwrap for lightmaps and helps to avoid a pixel sharing issue by islands.",
     "author": "Tomasz Muszynski",
     "blender":(2,80,0),
-    "version": (1, 2, 5),
+    "version": (1, 24),
     "support": "COMMUNITY",
     "category": "UV",
     "location": "View3D > Properties Region (N-Panel) > UV / View3D > menu UV / ImageEditor > menu UV",
@@ -100,7 +100,6 @@ class LightmapAutoUV(bpy.types.Operator):
 
 class LightmapAutoUVPanel(bpy.types.Panel):
     bl_label = "Lightmap Auto UV"
-    bl_idname = "LIGHTMAPAUTOUV_PT_LightmapAutoUVPanel"
     bl_space_type = "VIEW_3D"
     bl_region_type = "UI"
     bl_category = "UV"
