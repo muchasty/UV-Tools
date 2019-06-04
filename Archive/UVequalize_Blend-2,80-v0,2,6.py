@@ -20,7 +20,7 @@ bl_info = {
     "name": "UV Equalize",
     "description": "Equalizes scale of UVs of selected objects to active object.",
     "author": "Jakub Uhlik + Tomasz Muszynski (2.80 porting)",
-    "version": (0, 2, 7),
+    "version": (0, 2, 6),
     "blender":(2,80,0),
     "support": "COMMUNITY",
     "category": "UV",
@@ -95,7 +95,7 @@ def equalize(operator, context, use_pack, rotate, margin, use_active, ):
         bm = bmesh.new()
         # bm.from_mesh(o.data)
         # this way modifiers are taken into count, like mirror etc..
-        me = o.to_mesh(depsgraph=context.view_layer.depsgraph, preserve_all_data_layers=True )
+        me = o.to_mesh(context.depsgraph, True )
         bm.from_mesh(me)
         #
         bm.transform(o.matrix_world)
@@ -122,7 +122,7 @@ def equalize(operator, context, use_pack, rotate, margin, use_active, ):
         # cleanup
         bm.free()
         # also remove temp mesh
-        #bpy.data.meshes.remove(me)
+        bpy.data.meshes.remove(me)
         # cache
         cache[k] = (mesh_area, uv_area, )
         return mesh_area, uv_area
@@ -206,6 +206,7 @@ def equalize(operator, context, use_pack, rotate, margin, use_active, ):
 
 class UVEqualizePanel(bpy.types.Panel):
     bl_label = "UV Equalize"
+    bl_idname = "UVEQUALIZE_PT_UVEqualize_Panel"
     bl_space_type = "VIEW_3D"
     bl_region_type = "UI"
     bl_category = "UV"
