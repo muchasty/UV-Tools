@@ -103,7 +103,7 @@ class LightmapAutoUV(bpy.types.Operator):
         self.lightmap_Aspect=bpy.context.scene["lightmap_Aspect"]
         self.lightmap_Bounds=bpy.context.scene["lightmap_Bounds"]
         self.lightmap_Angle=bpy.context.scene["lightmap_Angle"]
-        self.lightmap_Angle=bpy.context.scene["lightmap_Packmaster"]
+        self.lightmap_Packmaster=bpy.context.scene["lightmap_Packmaster"]
         
         return context.window_manager.invoke_props_dialog(self)
     
