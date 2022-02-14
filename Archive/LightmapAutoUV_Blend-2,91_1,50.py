@@ -2,8 +2,8 @@ bl_info = {
     "name": "Lightmap Auto UV",
     "description": "Script makes automatic UV unwrap for lightmaps and helps to avoid a pixel sharing issue by islands.",
     "author": "Tomasz Muszynski",
-    "blender":(3,0,0),
-    "version": (1, 5, 1),
+    "blender":(2,91,0),
+    "version": (1, 5, 0),
     "support": "COMMUNITY",
     "category": "UV",
     "location": "View3D > Properties Region (N-Panel) > UV / View3D > menu UV / ImageEditor > menu UV",
@@ -33,7 +33,7 @@ class LightmapAutoUV(bpy.types.Operator):
     lightmap_Bounds : BoolProperty(name="Scale to Bounds")
     lightmap_Angle : FloatProperty(name="Angle limit", min=1, max=89)
     lightmap_LMP : BoolProperty(name="Use LIGHTMAP PACK Mode")
-    lightmap_Packmaster : BoolProperty(name="Use Packmaster 3 add-on")
+    lightmap_Packmaster : BoolProperty(name="Use Packmaster2 add-on")
 
     
     def execute(self, context):
@@ -68,18 +68,7 @@ class LightmapAutoUV(bpy.types.Operator):
         if self.lightmap_Packmaster==True : 
             bpy.ops.uv.select_all(action='SELECT')    
             bpy.ops.object.mode_set(mode='EDIT')
-            
-            # UVPACKMASTEER Setup ---------------------------
-            # ===============================================
-            bpy.context.scene.uvpm3_props.precision=9000
-            bpy.context.scene.uvpm3_props.margin=0
-            bpy.context.scene.uvpm3_props.rotation_step=45
-            
-            bpy.context.scene.uvpm3_props.pixel_margin_enable=True
-            bpy.context.scene.uvpm3_props.pixel_margin_tex_size=self.lightmap_Resolution
-            bpy.context.scene.uvpm3_props.pixel_margin=2
-            
-            bpy.ops.uvpackmaster3.pack(mode_id="pack.single_tile", pack_to_others=False)
+            bpy.ops.uvpackmaster2.uv_pack()
         
         
         
