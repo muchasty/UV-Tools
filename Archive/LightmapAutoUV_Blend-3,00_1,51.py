@@ -3,7 +3,7 @@ bl_info = {
     "description": "Script makes automatic UV unwrap for lightmaps and helps to avoid a pixel sharing issue by islands.",
     "author": "Tomasz Muszynski",
     "blender":(3,0,0),
-    "version": (1, 5, 2),
+    "version": (1, 5, 1),
     "support": "COMMUNITY",
     "category": "UV",
     "location": "View3D > Properties Region (N-Panel) > UV / View3D > menu UV / ImageEditor > menu UV",
@@ -71,9 +71,9 @@ class LightmapAutoUV(bpy.types.Operator):
             
             # UVPACKMASTEER Setup ---------------------------
             # ===============================================
-            #bpy.context.scene.uvpm3_props.precision=9000
+            bpy.context.scene.uvpm3_props.precision=9000
             bpy.context.scene.uvpm3_props.margin=0
-            #bpy.context.scene.uvpm3_props.rotation_step=45
+            bpy.context.scene.uvpm3_props.rotation_step=45
             
             bpy.context.scene.uvpm3_props.pixel_margin_enable=True
             bpy.context.scene.uvpm3_props.pixel_margin_tex_size=self.lightmap_Resolution
